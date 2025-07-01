@@ -4,9 +4,9 @@ import User from "@/models/User";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 
-export async function POST(){
-    const wh = new Webhook(process.env.SIGNING_SECRET)
-    const headerPayload = await headers()
+export async function POST(req){
+    const wh = new Webhook(process.env.SIGNING_SECRET);
+    const headerPayload = await headers();
     const svixHeaders = {
         "svix-id": headerPayload.get("svix-id"),
         "svix-signature": headerPayload.get("svix-signature"),
@@ -23,7 +23,7 @@ export async function POST(){
 
     const userData = {
         _id: data.id,
-        email: data.email_adresses[0].email_address,
+        email: data.email_addresses[0].email_address,
         name: `${data.first_name} ${data.last_name}`,
         image: data.image_url,
     }
