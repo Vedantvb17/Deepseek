@@ -51,7 +51,6 @@ const Sidebar = ({ expand, setExpand }) => {
         </div>
       </div>
 
-      {/* Footer */}
       <div>
         {/* Get App Section */}
         <div className={`flex items-center cursor-pointer group relative ${expand ? 'gap-1 text-white/80 text-sm p-2.5 border border-primary rounded-lg hover:bg-white/10' : 'h-10 w-10 mx-auto hover:bg-gray-500/30 rounded-lg'}`}>

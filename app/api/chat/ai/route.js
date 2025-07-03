@@ -7,16 +7,16 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
-    console.log("✅ /api/chat/ai endpoint hit");
+    console.log("/api/chat/ai endpoint hit");
 
     const { userId } = getAuth(req);
     const { chatId, prompt } = await req.json();
 
-    console.log("🔑 userId:", userId);
-    console.log("🧠 Received prompt:", prompt);
+    console.log("userId:", userId);
+    console.log("Received prompt:", prompt);
 
     if (!userId) {
-      console.log("❌ No user ID");
+      console.log("No user ID");
       return NextResponse.json({ success: false, message: "User not authenticated" });
     }
 
@@ -24,7 +24,7 @@ export async function POST(req) {
     const chat = await Chat.findOne({ userId, _id: chatId });
 
     if (!chat) {
-      console.log("❌ Chat not found");
+      console.log("Chat not found");
       return NextResponse.json({ success: false, message: "Chat not found" });
     }
 
@@ -36,7 +36,7 @@ export async function POST(req) {
     };
     chat.messages.push(userMessage);
 
-    // ✅ Call OpenRouter API
+    // Call OpenRouter API
     const openRouterRes = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -44,7 +44,7 @@ export async function POST(req) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "mistralai/mistral-7b-instruct", // Free, change to Claude/GPT if needed
+        model: "mistralai/mistral-7b-instruct",
         messages: [
           { role: "system", content: "You are a helpful AI assistant." },
           { role: "user", content: prompt }
@@ -56,11 +56,11 @@ export async function POST(req) {
 
     const aiResponse = responseData.choices?.[0]?.message?.content;
     if (!aiResponse) {
-      console.log("❌ No AI response from OpenRouter");
+      console.log("No AI response from OpenRouter");
       return NextResponse.json({ success: false, message: "No response from AI" });
     }
 
-    console.log("💬 OpenRouter response:", aiResponse);
+    console.log("OpenRouter response:", aiResponse);
 
     const assistantMessage = {
       role: "assistant",
@@ -74,7 +74,7 @@ export async function POST(req) {
     return NextResponse.json({ success: true, data: assistantMessage });
 
   } catch (error) {
-    console.error("❌ OpenRouter API Error:", error);
+    console.error("OpenRouter API Error:", error);
     return NextResponse.json({
       success: false,
       message: "OpenRouter request failed",
